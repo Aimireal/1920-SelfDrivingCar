@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="740644c5-f7ca-424e-a34e-2e61af7a0757" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trafficLightDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/road_markings.py" beforeDir="false" afterPath="$PROJECT_DIR$/processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrafficLightDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/pi/classes/control.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +36,12 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user1\Documents\Final Year Project\testdata\images" />
+      <recent name="C:\Users\user1\Documents\Final Year Project\testdata\videos" />
+    </key>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -49,7 +56,8 @@
       <workItem from="1580923460338" duration="5311000" />
       <workItem from="1580931160364" duration="6357000" />
       <workItem from="1581070896130" duration="4385000" />
-      <workItem from="1583667761205" duration="636000" />
+      <workItem from="1583667761205" duration="10338000" />
+      <workItem from="1588675981057" duration="3796000" />
     </task>
     <servers />
   </component>
