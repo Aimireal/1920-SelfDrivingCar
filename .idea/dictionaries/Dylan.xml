@@ -3,7 +3,9 @@
     <words>
       <w>gpio</w>
       <w>hough</w>
+      <w>setwarnings</w>
       <w>speedval</w>
+      <w>testdata</w>
       <w>turnval</w>
     </words>
   </dictionary>

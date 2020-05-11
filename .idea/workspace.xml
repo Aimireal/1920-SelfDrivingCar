@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="740644c5-f7ca-424e-a34e-2e61af7a0757" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/trafficLightDetection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPi/GPIO.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPi/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/laneDetection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TrafficLightDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/pi/classes/control.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pi/classes/control.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trafficLightDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/trafficLightDetection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +30,6 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -34,7 +37,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -57,12 +60,17 @@
       <workItem from="1580931160364" duration="6357000" />
       <workItem from="1581070896130" duration="4385000" />
       <workItem from="1583667761205" duration="10338000" />
-      <workItem from="1588675981057" duration="3796000" />
+      <workItem from="1588675981057" duration="6079000" />
+      <workItem from="1588859693439" duration="874000" />
+      <workItem from="1588872297570" duration="614000" />
+      <workItem from="1588873058313" duration="1278000" />
+      <workItem from="1588942961963" duration="8477000" />
+      <workItem from="1589111361123" duration="10442000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
     <state x="414" y="176" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580924264634">
@@ -77,10 +85,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="681" y="469" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1580936740753" />
-    <state x="461" y="163" key="SettingsEditor" timestamp="1580935667677">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="461" y="153" key="SettingsEditor" timestamp="1589034283511">
+      <screen x="0" y="0" width="1920" height="978" />
     </state>
     <state x="461" y="163" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1580935667677" />
+    <state x="461" y="153" key="SettingsEditor/0.0.1920.978@0.0.1920.978" timestamp="1589034283511" />
     <state x="661" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1580922335844">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

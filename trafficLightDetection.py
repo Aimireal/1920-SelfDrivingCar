@@ -1,30 +1,22 @@
-# import the necessary packages
 import numpy as np
 import argparse
 import cv2
 import time
 
-cap = cv2.VideoCapture(
-    0)  # Set Capture Device, in case of a USB Webcam try 1, or give -1 to get a list of available devices
+cap = cv2.VideoCapture(0)  # Set Capture Device, -1 to get a list of available devices
 
 # Set Width and Height
 # cap.set(3,1280)
 # cap.set(4,720)
 
-# The above step is to set the Resolution of the Video. The default is 640x480.
-# This example works with a Resolution of 640x480.
-
 while (True):
-    # Capture frame-by-frame
+    # load copy of frame and convert to greyscale
     ret, frame = cap.read()
-
-    # load the image, clone it for output, and then convert it to grayscale
-
     output = frame.copy()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # apply GuassianBlur to reduce noise. medianBlur is also added for smoothening, reducing noise.
-    gray = cv2.GaussianBlur(gray, (5, 5), 0);
+    # apply blur to reduce noise and smooth image
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
     gray = cv2.medianBlur(gray, 5)
 
     # Adaptive Guassian Threshold is to detect sharp edges in the Image. For more information Google it.
@@ -60,9 +52,9 @@ while (True):
 
         # Display the resulting frame
         cv2.imshow('gray', gray)
-    cv2.imshow('frame', output)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        cv2.imshow('frame', output)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 # When everything done, release the capture
 cap.release()
