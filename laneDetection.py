@@ -2,17 +2,21 @@ import numpy as np
 import cv2
 import utils
 
+######################################################################################################
+# laneDetection.py: Uses utils.py to process video feeds for lane detection and steering prediction
+######################################################################################################
 
 cameraFeed = False
-videoPath = 'testdata/videos/dashcamyorks.mp4'
+videoPath = 'testdata/videos/dashcam.mp4'
 cameraNo = 1
 frameWidth = 640
 frameHeight = 480
 
+# Set up our predefined distortion map co-ordinates
 if cameraFeed:
-    intialTracbarVals = [24, 55, 12, 100]  # #wT,hT,wB,hB
+    intialTrackbarVals = [24, 55, 12, 100]
 else:
-    intialTracbarVals = [42, 63, 14, 87]  # wT,hT,wB,hB
+    intialTrackbarVals = [42, 63, 14, 87]
 
 if cameraFeed:
     cap = cv2.VideoCapture(cameraNo)
@@ -20,19 +24,19 @@ if cameraFeed:
     cap.set(4, frameHeight)
 else:
     cap = cv2.VideoCapture(videoPath)
+
 count = 0
 noOfArrayValues = 10
 global arrayCurve, arrayCounter
 arrayCounter = 0
 arrayCurve = np.zeros([noOfArrayValues])
 myVals = []
-utils.initializeTrackbars(intialTracbarVals)
+utils.initializeTrackbars(intialTrackbarVals)
 
 while True:
-
     success, img = cap.read()
-    # img = cv2.imread('test3.jpg')
-    if cameraFeed == False: img = cv2.resize(img, (frameWidth, frameHeight), None)
+    if not cameraFeed:
+        img = cv2.resize(img, (frameWidth, frameHeight), None)
     imgWarpPoints = img.copy()
     imgFinal = img.copy()
     imgCanny = img.copy()
@@ -49,7 +53,7 @@ while True:
         lane_curve = np.mean([curverad[0], curverad[1]])
         imgFinal = utils.draw_lanes(img, curves[0], curves[1], frameWidth, frameHeight, src=src)
 
-        # ## Average
+        # Average the lane curvature
         currentCurve = lane_curve // 50
         if int(np.sum(arrayCurve)) == 0:
             averageCurve = currentCurve
@@ -59,8 +63,11 @@ while True:
             arrayCurve[arrayCounter] = averageCurve
         else:
             arrayCurve[arrayCounter] = currentCurve
+
         arrayCounter += 1
-        if arrayCounter >= noOfArrayValues: arrayCounter = 0
+        if arrayCounter >= noOfArrayValues:
+            arrayCounter = 0
+
         cv2.putText(imgFinal, str(int(averageCurve)), (frameWidth // 2 - 70, 70), cv2.FONT_HERSHEY_DUPLEX, 1.75,
                     (0, 0, 255), 2, cv2.LINE_AA)
 
@@ -73,16 +80,17 @@ while True:
     imgThres = cv2.cvtColor(imgThres, cv2.COLOR_GRAY2BGR)
     imgBlank = np.zeros_like(img)
 
-    #Show every process of what we do
+    # Show every process of what we do
     # imgStacked = utils.stackImages(0.7, ([img, imgUndis, imgWarpPoints],
-                                         # [imgColor, imgCanny, imgThres],
-                                         # [imgWarp, imgSliding, imgFinal]
-                                         #  ))
-
-    imgStacked = utils.stackImages(0.7, ([imgWarpPoints, imgFinal]))
-
-    cv2.imshow("PipeLine", imgStacked)
+    # [imgColor, imgCanny, imgThres],
+    # [imgWarp, imgSliding, imgFinal]
+    #  ))
     # cv2.imshow("Result", imgFinal)
+
+    #Show our interface and set up an exit condition on Q
+    imgStacked = utils.stackImages(0.9, ([imgWarpPoints, imgFinal]))
+    cv2.imshow("PipeLine", imgStacked)
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
