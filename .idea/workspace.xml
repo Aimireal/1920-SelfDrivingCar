@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="740644c5-f7ca-424e-a34e-2e61af7a0757" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Controls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RPi/GPIO.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RPi/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/laneDetection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/streaming/params.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Dylan.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pi/classes/control.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trafficLightDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/trafficLightDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laneDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/laneDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roadDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/laneDetectionOLD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testdata/videos/dashcam2.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/testdata/videos/dashcamalt.mp4" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +36,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -65,7 +64,9 @@
       <workItem from="1588872297570" duration="614000" />
       <workItem from="1588873058313" duration="1278000" />
       <workItem from="1588942961963" duration="8477000" />
-      <workItem from="1589111361123" duration="10442000" />
+      <workItem from="1589111361123" duration="11851000" />
+      <workItem from="1589222376262" duration="14479000" />
+      <workItem from="1589631707267" duration="4900000" />
     </task>
     <servers />
   </component>
@@ -77,19 +78,21 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="414" y="176" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580924264634" />
-    <state x="344" y="234" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1583668792317">
-      <screen x="0" y="0" width="1200" height="860" />
+    <state x="550" y="266" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1589313701388">
+      <screen x="0" y="0" width="1920" height="978" />
     </state>
     <state x="344" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1200.860@0.0.1200.860" timestamp="1583668792317" />
-    <state x="681" y="469" key="FileChooserDialogImpl" timestamp="1580936740753">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="550" y="266" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.978@0.0.1920.978" timestamp="1589313701388" />
+    <state x="681" y="441" key="FileChooserDialogImpl" timestamp="1589221004083">
+      <screen x="0" y="0" width="1920" height="978" />
     </state>
     <state x="681" y="469" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1580936740753" />
-    <state x="461" y="153" key="SettingsEditor" timestamp="1589034283511">
+    <state x="681" y="441" key="FileChooserDialogImpl/0.0.1920.978@0.0.1920.978" timestamp="1589221004083" />
+    <state x="461" y="153" key="SettingsEditor" timestamp="1589224751270">
       <screen x="0" y="0" width="1920" height="978" />
     </state>
     <state x="461" y="163" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1580935667677" />
-    <state x="461" y="153" key="SettingsEditor/0.0.1920.978@0.0.1920.978" timestamp="1589034283511" />
+    <state x="461" y="153" key="SettingsEditor/0.0.1920.978@0.0.1920.978" timestamp="1589224751270" />
     <state x="661" y="345" key="com.intellij.ide.util.TipDialog" timestamp="1580922335844">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -98,5 +101,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1580934270137" />
+    <state x="682" y="426" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1589384224669">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="682" y="426" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589384224669" />
+    <state x="682" y="401" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1920.978@0.0.1920.978" timestamp="1589318598888" />
   </component>
 </project>

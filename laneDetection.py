@@ -1,110 +1,89 @@
-import cv2
 import numpy as np
-import glob
-import time
+import cv2
+import utils
 
 
-def filter_region(image, vertices):
-    """
-    Create the mask using the vertices and apply it to the input image
-    """
-    mask = np.zeros_like(image)
-    if len(mask.shape) == 2:
-        cv2.fillPoly(mask, vertices, 255)
-    else:
-        cv2.fillPoly(mask, vertices, (255,) * mask.shape[2])  # in case, the input image has a channel dimension
-    return cv2.bitwise_and(image, mask)
+cameraFeed = False
+videoPath = 'testdata/videos/dashcamyorks.mp4'
+cameraNo = 1
+frameWidth = 640
+frameHeight = 480
 
+if cameraFeed:
+    intialTracbarVals = [24, 55, 12, 100]  # #wT,hT,wB,hB
+else:
+    intialTracbarVals = [42, 63, 14, 87]  # wT,hT,wB,hB
 
-def select_region(image):
-    """
-    It keeps the region surrounded by the `vertices` (i.e. polygon).  Other area is set to 0 (black).
-    """
-    # first, define the polygon by vertices
-    rows, cols = image.shape[:2]
-    bottom_left = [cols * 0.1, rows * 0.95]
-    top_left = [cols * 0.4, rows * 0.6]
-    bottom_right = [cols * 0.9, rows * 0.95]
-    top_right = [cols * 0.6, rows * 0.6]
-    # the vertices are an array of polygons (i.e array of arrays) and the data type must be integer
-    vertices = np.array([[bottom_left, top_left, top_right, bottom_right]], dtype=np.int32)
-    return filter_region(image, vertices)
+if cameraFeed:
+    cap = cv2.VideoCapture(cameraNo)
+    cap.set(3, frameWidth)
+    cap.set(4, frameHeight)
+else:
+    cap = cv2.VideoCapture(videoPath)
+count = 0
+noOfArrayValues = 10
+global arrayCurve, arrayCounter
+arrayCounter = 0
+arrayCurve = np.zeros([noOfArrayValues])
+myVals = []
+utils.initializeTrackbars(intialTracbarVals)
 
+while True:
 
-def draw_lines(image, lines, color=(0, 0, 255), thickness=2, make_copy=True):
-    # the lines returned by cv2.HoughLinesP has the shape (-1, 1, 4)
-    if make_copy:
-        image = np.copy(image)  # don't want to modify the original
-    for line in lines:
-        for x1, y1, x2, y2 in line:
-            cv2.line(image, (x1, y1), (x2, y2), color, thickness)
-    return image
+    success, img = cap.read()
+    # img = cv2.imread('test3.jpg')
+    if cameraFeed == False: img = cv2.resize(img, (frameWidth, frameHeight), None)
+    imgWarpPoints = img.copy()
+    imgFinal = img.copy()
+    imgCanny = img.copy()
 
+    imgUndis = utils.undistort(img)
+    imgThres, imgCanny, imgColor = utils.thresholding(imgUndis)
+    src = utils.valTrackbars()
+    imgWarp = utils.perspective_warp(imgThres, dst_size=(frameWidth, frameHeight), src=src)
+    imgWarpPoints = utils.drawPoints(imgWarpPoints, src)
+    imgSliding, curves, lanes, ploty = utils.sliding_window(imgWarp, draw_windows=True)
 
-def slope(x1, y1, x2, y2):
-    return (float(y2) - float(y1)) / (float(x2) - float(x1))
+    try:
+        curverad = utils.get_curve(imgFinal, curves[0], curves[1])
+        lane_curve = np.mean([curverad[0], curverad[1]])
+        imgFinal = utils.draw_lanes(img, curves[0], curves[1], frameWidth, frameHeight, src=src)
 
+        # ## Average
+        currentCurve = lane_curve // 50
+        if int(np.sum(arrayCurve)) == 0:
+            averageCurve = currentCurve
+        else:
+            averageCurve = np.sum(arrayCurve) // arrayCurve.shape[0]
+        if abs(averageCurve - currentCurve) > 200:
+            arrayCurve[arrayCounter] = averageCurve
+        else:
+            arrayCurve[arrayCounter] = currentCurve
+        arrayCounter += 1
+        if arrayCounter >= noOfArrayValues: arrayCounter = 0
+        cv2.putText(imgFinal, str(int(averageCurve)), (frameWidth // 2 - 70, 70), cv2.FONT_HERSHEY_DUPLEX, 1.75,
+                    (0, 0, 255), 2, cv2.LINE_AA)
 
-def lane_slopes_finder(img, lane):
-    h, w, c = img.shape
-    slopes = []
-    intercepts = []
-    for line in lane:
-        for x1, y1, x2, y2 in line:
-            m = slope(x1, y1, x2, y2)
-            intercept = y1 - m * x1
-            slopes.append(m)
-            intercepts.append(intercept)
+    except:
+        lane_curve = 00
+        pass
 
-    mean_slope = np.mean(slopes)
-    x_top = int((mean_slope * (h / 2)) + (w / 2))
-    x_bottom = int((-mean_slope * (h / 2)) + (w / 2))
-    cv2.line(img, (w / 2, 0), (w / 2, h), (255, 0, 0), 2)
-    cv2.line(img, (x_bottom, h), (x_top, 0), (0, 255, 0), 2)
-    return mean_slope
+    imgFinal = utils.drawLines(imgFinal, lane_curve)
 
+    imgThres = cv2.cvtColor(imgThres, cv2.COLOR_GRAY2BGR)
+    imgBlank = np.zeros_like(img)
 
-def limit(num, minn, maxx):
-    if num < minn:
-        num = minn
-    elif num > maxx:
-        num = maxx
-    return num
+    #Show every process of what we do
+    # imgStacked = utils.stackImages(0.7, ([img, imgUndis, imgWarpPoints],
+                                         # [imgColor, imgCanny, imgThres],
+                                         # [imgWarp, imgSliding, imgFinal]
+                                         #  ))
 
+    imgStacked = utils.stackImages(0.7, ([imgWarpPoints, imgFinal]))
 
-# ---------------------------------------------------------------
-
-cap = cv2.VideoCapture('testdata/videos/dashcam.mp4')
-times = []
-
-while cap.isOpened():
-    time1 = time.time()
-    ret, road = cap.read()
-    road = cv2.resize(road, (420, 240))
-    gray_road = cv2.cvtColor(road, cv2.COLOR_BGR2GRAY)
-    roi = select_region(gray_road)
-    retval, threshold = cv2.threshold(roi, 200, 255, cv2.THRESH_BINARY)
-    edges = cv2.Canny(threshold, 100, 150)
-    houghLines = cv2.HoughLinesP(edges, rho=1, theta=np.pi / 180, threshold=20, minLineLength=20, maxLineGap=300)
-    lane_lines = draw_lines(road, houghLines)
-    mean_slope = lane_slopes_finder(lane_lines, np.array(houghLines))
-    # cv2.imshow('Road', road)
-    # cv2.imshow('GrayScale Road', gray_road)
-    # cv2.imshow('THRESHOLD', threshold)
-    # cv2.imshow('Edges', edges)
-    # cv2.imshow('ROI', roi)
-    # angle = limit(float(controls.translate(mean_slope, 3, -3, 0, 180)), 0, 180)
-    # controls.update(angle)
-    cv2.imshow('Lanes', lane_lines)
-
-    time2 = time.time()
-    times.append(time2 - time1)
-    print('\n')
-    # print('Angle:', angle)
-    print('Slope:', mean_slope)
-    print('FPS:', np.mean(times) ** -1)
-    k = cv2.waitKey(30) & 0xFF
-    if k == ord('q'):
+    cv2.imshow("PipeLine", imgStacked)
+    # cv2.imshow("Result", imgFinal)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
