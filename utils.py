@@ -11,7 +11,7 @@ def nothing(x):
     pass
 
 
-def undistort(img, cal_dir='cal_pickle.p'):
+def remove_distortion(img, cal_dir='cal_pickle.p'):
     with open(cal_dir, mode='rb') as f:
         file = pickle.load(f)
     mtx = file['mtx']
@@ -20,20 +20,20 @@ def undistort(img, cal_dir='cal_pickle.p'):
     return dst
 
 
-def initializeTrackbars(intialTrackbarVals):
-    cv2.namedWindow("Trackbars")
-    cv2.resizeWindow("Trackbars", 360, 240)
-    cv2.createTrackbar("Width Top", "Trackbars", intialTrackbarVals[0], 50, nothing)
-    cv2.createTrackbar("Height Top", "Trackbars", intialTrackbarVals[1], 100, nothing)
-    cv2.createTrackbar("Width Bottom", "Trackbars", intialTrackbarVals[2], 50, nothing)
-    cv2.createTrackbar("Height Bottom", "Trackbars", intialTrackbarVals[3], 100, nothing)
+def initializeTrackPoints(intialTrackPointVals):
+    cv2.namedWindow("Tracking Points")
+    cv2.resizeWindow("Tracking Points", 360, 240)
+    cv2.createTrackbar("Width Top", "Tracking Points", intialTrackPointVals[0], 50, nothing)
+    cv2.createTrackbar("Height Top", "Tracking Points", intialTrackPointVals[1], 100, nothing)
+    cv2.createTrackbar("Width Bottom", "Tracking Points", intialTrackPointVals[2], 50, nothing)
+    cv2.createTrackbar("Height Bottom", "Tracking Points", intialTrackPointVals[3], 100, nothing)
 
 
-def valTrackbars():
-    widthTop = cv2.getTrackbarPos("Width Top", "Trackbars")
-    heightTop = cv2.getTrackbarPos("Height Top", "Trackbars")
-    widthBottom = cv2.getTrackbarPos("Width Bottom", "Trackbars")
-    heightBottom = cv2.getTrackbarPos("Height Bottom", "Trackbars")
+def valTrackPoints():
+    widthTop = cv2.getTrackbarPos("Width Top", "Tracking Points")
+    heightTop = cv2.getTrackbarPos("Height Top", "Tracking Points")
+    widthBottom = cv2.getTrackbarPos("Width Bottom", "Tracking Points")
+    heightBottom = cv2.getTrackbarPos("Height Bottom", "Tracking Points")
     src = np.float32([(widthTop / 100, heightTop / 100), (1 - (widthTop / 100), heightTop / 100),
                       (widthBottom / 100, heightBottom / 100), (1 - (widthBottom / 100), heightBottom / 100)])
     return src
@@ -47,7 +47,7 @@ def drawPoints(img, src):
     return img
 
 
-def colorFilter(img):
+def colourFilter(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     lowerYellow = np.array([18, 94, 140])
     upperYellow = np.array([48, 255, 255])
@@ -66,16 +66,16 @@ def thresholding(img):
     imgCanny = cv2.Canny(imgBlur, 50, 100)
     imgDial = cv2.dilate(imgCanny, kernel, iterations=1)
     imgErode = cv2.erode(imgDial, kernel, iterations=1)
-    imgColor = colorFilter(img)
-    combinedImage = cv2.bitwise_or(imgColor, imgErode)
-    return combinedImage, imgCanny, imgColor
+    imgColour = colourFilter(img)
+    combinedImage = cv2.bitwise_or(imgColour, imgErode)
+    return combinedImage, imgCanny, imgColour
 
 
 def pipeline(img, s_thresh=(100, 255), sx_thresh=(15, 255)):
-    img = undistort(img)
+    img = remove_distortion(img)
     img = np.copy(img)
 
-    # Convert to HLS color space and separate the V channel
+    # Convert to HLS colour space and separate the V channel
     hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS).astype(np.float)
     l_channel = hls[:, :, 1]
     s_channel = hls[:, :, 2]
@@ -89,7 +89,7 @@ def pipeline(img, s_thresh=(100, 255), sx_thresh=(15, 255)):
     sxbinary = np.zeros_like(scaled_sobel)
     sxbinary[(scaled_sobel >= sx_thresh[0]) & (scaled_sobel <= sx_thresh[1])] = 1
 
-    # Threshold color channel
+    # Threshold colour channel
     s_binary = np.zeros_like(s_channel)
     s_binary[(s_channel >= s_thresh[0]) & (s_channel <= s_thresh[1])] = 1
 
@@ -174,9 +174,9 @@ def sliding_window(img, nwindows=15, margin=50, minpix=1, draw_windows=True):
         # Draw the visualised image
         if draw_windows:
             cv2.rectangle(out_img, (win_xleft_low, win_y_low), (win_xleft_high, win_y_high),
-                          (100, 255, 255), 1)
+                          (255, 0, 255), 1)
             cv2.rectangle(out_img, (win_xright_low, win_y_low), (win_xright_high, win_y_high),
-                          (100, 255, 255), 1)
+                          (255, 0, 255), 1)
 
             # Identify nonzero pixels in window
         good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
@@ -228,8 +228,8 @@ def sliding_window(img, nwindows=15, margin=50, minpix=1, draw_windows=True):
         left_fitx = left_fit_[0] * plot ** 2 + left_fit_[1] * plot + left_fit_[2]
         right_fitx = right_fit_[0] * plot ** 2 + right_fit_[1] * plot + right_fit_[2]
 
-        out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 100]
-        out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 100, 255]
+        out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [0, 0, 255]
+        out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [255, 255, 255]
 
         return out_img, (left_fitx, right_fitx), (left_fit_, right_fit_), plot
     else:
@@ -257,32 +257,16 @@ def get_curve(img, leftx, rightx):
 
 def draw_lanes(img, left_fit, right_fit, frameWidth, frameHeight, src):
     plot = np.linspace(0, img.shape[0] - 1, img.shape[0])
-    color_img = np.zeros_like(img)
+    colour_img = np.zeros_like(img)
 
     left = np.array([np.transpose(np.vstack([left_fit, plot]))])
     right = np.array([np.flipud(np.transpose(np.vstack([right_fit, plot])))])
     points = np.hstack((left, right))
 
-    cv2.fillPoly(color_img, np.int_(points), (0, 200, 255))
-    inv_perspective = inv_perspective_warp(color_img, (frameWidth, frameHeight), dst=src)
+    cv2.fillPoly(colour_img, np.int_(points), (255, 0, 0))
+    inv_perspective = inv_perspective_warp(colour_img, (frameWidth, frameHeight), dst=src)
     inv_perspective = cv2.addWeighted(img, 0.5, inv_perspective, 0.7, 0)
     return inv_perspective
-
-
-def textDisplay(curve, img):
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(img, str(curve), ((img.shape[1] // 2) - 30, 40), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
-    directionText = ' No lane '
-    if curve > 10:
-        directionText = 'Right'
-    elif curve < -10:
-        directionText = 'Left'
-    elif 10 > curve > -10:
-        directionText = 'Straight'
-    elif curve == -1000000:
-        directionText = 'No Lane Found'
-    cv2.putText(img, directionText, ((img.shape[1] // 2) - 35, (img.shape[0]) - 20), font, 1, (0, 200, 200), 2,
-                cv2.LINE_AA)
 
 
 def stackImages(scale, imgArray):
@@ -324,8 +308,8 @@ def drawLines(img, lane_curve):
     for x in range(-30, 30):
         w = myWidth // 20
         cv2.line(img, (w * x + int(lane_curve // 100), myHeight - 30),
-                 (w * x + int(lane_curve // 100), myHeight), (0, 0, 255), 2)
+                 (w * x + int(lane_curve // 100), myHeight), (0, 255, 255), 2)
     cv2.line(img, (int(lane_curve // 100) + myWidth // 2, myHeight - 30),
-             (int(lane_curve // 100) + myWidth // 2, myHeight), (0, 255, 0), 3)
-    cv2.line(img, (myWidth // 2, myHeight - 50), (myWidth // 2, myHeight), (0, 255, 255), 2)
+             (int(lane_curve // 100) + myWidth // 2, myHeight), (0, 255, 255), 3)
+    cv2.line(img, (myWidth // 2, myHeight - 50), (myWidth // 2, myHeight), (0, 0, 255), 2)
     return img

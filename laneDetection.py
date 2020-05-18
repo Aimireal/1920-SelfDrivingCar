@@ -7,16 +7,16 @@ import utils
 ######################################################################################################
 
 cameraFeed = False
-videoPath = 'testdata/videos/dashcam.mp4'
+videoPath = 'testdata/videos/dashcamdark.mp4'
 cameraNo = 1
 frameWidth = 640
 frameHeight = 480
 
 # Set up our predefined distortion map co-ordinates
 if cameraFeed:
-    intialTrackbarVals = [24, 55, 12, 100]
+    initialTrackPoint = [24, 55, 12, 100]
 else:
-    intialTrackbarVals = [42, 63, 14, 87]
+    initialTrackPoint = [42, 47, 16, 77]
 
 if cameraFeed:
     cap = cv2.VideoCapture(cameraNo)
@@ -31,7 +31,7 @@ global arrayCurve, arrayCounter
 arrayCounter = 0
 arrayCurve = np.zeros([noOfArrayValues])
 myVals = []
-utils.initializeTrackbars(intialTrackbarVals)
+utils.initializeTrackPoints(initialTrackPoint)
 
 while True:
     success, img = cap.read()
@@ -41,9 +41,9 @@ while True:
     imgFinal = img.copy()
     imgCanny = img.copy()
 
-    imgUndis = utils.undistort(img)
+    imgUndis = utils.remove_distortion(img)
     imgThres, imgCanny, imgColor = utils.thresholding(imgUndis)
-    src = utils.valTrackbars()
+    src = utils.valTrackPoints()
     imgWarp = utils.perspective_warp(imgThres, dst_size=(frameWidth, frameHeight), src=src)
     imgWarpPoints = utils.drawPoints(imgWarpPoints, src)
     imgSliding, curves, lanes, ploty = utils.sliding_window(imgWarp, draw_windows=True)
@@ -69,14 +69,13 @@ while True:
             arrayCounter = 0
 
         cv2.putText(imgFinal, str(int(averageCurve)), (frameWidth // 2 - 70, 70), cv2.FONT_HERSHEY_DUPLEX, 1.75,
-                    (0, 0, 255), 2, cv2.LINE_AA)
+                    (255, 0, 255), 2, cv2.LINE_AA)
 
     except:
         lane_curve = 00
         pass
 
     imgFinal = utils.drawLines(imgFinal, lane_curve)
-
     imgThres = cv2.cvtColor(imgThres, cv2.COLOR_GRAY2BGR)
     imgBlank = np.zeros_like(img)
 
@@ -87,8 +86,8 @@ while True:
     #  ))
     # cv2.imshow("Result", imgFinal)
 
-    #Show our interface and set up an exit condition on Q
-    imgStacked = utils.stackImages(0.9, ([imgWarpPoints, imgFinal]))
+    # Show our interface and set up an exit condition on Q
+    imgStacked = utils.stackImages(0.9, ([imgWarpPoints, imgSliding, imgFinal]))
     cv2.imshow("PipeLine", imgStacked)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):

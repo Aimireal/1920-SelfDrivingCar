@@ -73,7 +73,7 @@ def draw_hough(image, hough_lines):
 
 
 # Video processing
-video = cv2.VideoCapture("testdata/videos/dashcam.mp4")
+video = cv2.VideoCapture("testdata/videos/dashcamalt.mp4")
 while video.isOpened():
     _, frame = video.read()
 

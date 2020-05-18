@@ -4,6 +4,7 @@
     <list default="true" id="740644c5-f7ca-424e-a34e-2e61af7a0757" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/laneDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/laneDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/laneDetectionOLD.py" beforeDir="false" afterPath="$PROJECT_DIR$/laneDetectionOLD.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,6 +64,7 @@
       <workItem from="1589111361123" duration="11851000" />
       <workItem from="1589222376262" duration="14479000" />
       <workItem from="1589631707267" duration="7673000" />
+      <workItem from="1589803431339" duration="5744000" />
     </task>
     <servers />
   </component>
@@ -83,9 +85,10 @@
       <screen x="0" y="0" width="1920" height="978" />
     </state>
     <state x="461" y="153" key="SettingsEditor/0.0.1920.978@0.0.1920.978" timestamp="1589224751270" />
-    <state x="667" y="88" width="585" height="801" key="find.popup" timestamp="1589654837595">
-      <screen x="0" y="0" width="1920" height="978" />
+    <state x="667" y="94" width="585" height="852" key="find.popup" timestamp="1589837131252">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="667" y="94" width="585" height="852" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589837131252" />
     <state x="667" y="88" width="585" height="801" key="find.popup/0.0.1920.978@0.0.1920.978" timestamp="1589654837595" />
     <state x="682" y="426" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1589384224669">
       <screen x="0" y="0" width="1920" height="1040" />
